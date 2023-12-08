@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -35,11 +36,16 @@ public class Robot extends TimedRobot {
   // Crear el control de xbox, para usar un mando de xbox como mando
   XboxController joy = new XboxController(0);
 
+  Timer tmr = new Timer();
+
   @Override
-  // Pedro sabe
-  public void robotInit() {    
+  public void robotInit() {
+    // Se establecen los motores del lado izquierdo invertidos, para que giren en la misma
+    // direccion que los motores derechos al recibir la misma señal
     izquierda.setInverted(true);
+    // Se declara que el motor trasero izquierdo sigue al motor delantero izquierdo
     left_back.follow(left_front);
+    // Se declara que el motor trasero derecho sigue al motor delantero derecho
     right_back.follow(right_front);
   }
 
@@ -47,7 +53,14 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {}
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    tmr.stop();
+    tmr.reset();
+    tmr.start();
+    while(tmr.get() < 5){
+      transmission.arcadeDrive(0.3, 0);
+    }
+  }
 
   @Override
   public void autonomousPeriodic() {}
@@ -57,20 +70,34 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    /*if(joy.getAButton()){
-      left_front.set(0.5);
-    }else if(joy.getYButton()){
-      left_back.set(0.5);
+    double vel = 0.5;
+    //Codigo para probar cada motor con un boton (unicamente descomantado cuando 
+    //se requieren hacer con los motores por separado)
+    if(joy.getAButton()){
+      tmr.stop();
+      tmr.reset();
+      tmr.start();
+      while(tmr.get() <= 1.8){
+        transmission.arcadeDrive(0, 0.5);
+      }
     }else if(joy.getBButton()){
-      right_front.set(0.5);
+      tmr.stop();
+      tmr.reset();
+      tmr.start();
+      while(tmr.get() <= 1.8){
+        transmission.arcadeDrive(0, -0.5);
+      }
     }else if(joy.getXButton()){
+      vel = 0.7;
+    }/*else if(joy.getXButton()){
       right_back.set(0.5);
-    }else{
-      right_front.set(0);
-      left_front.set(0);
-    }*/
+    }*/else{
+      vel = 0.5;
+    }
 
-    transmission.arcadeDrive(joy.getLeftY()*-0.6, joy.getRightX()*-0.6);
+    // Orden para hacer que la transmicion avance, se requiere multiplicar el valor del joystick por
+    // un decimal (este decimal definira el limite de velocidad) para que el motor nunca tenga una velocidad de 1
+    transmission.arcadeDrive(joy.getLeftY()*-vel, joy.getRightX()*-vel);
   }
 
   @Override
