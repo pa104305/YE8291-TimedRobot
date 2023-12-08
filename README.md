@@ -16,8 +16,10 @@ Para el uso de los controladores SparkMax incluidos en el hardware del dispositi
 Aporta distintas herramientas las mas utilizadas por el equipo:
 > FRC DRIVER STATION
 >> Se usan para controlar el robot y verificar su estado.
+
 > ROBORIO IMAGINING TOOL
 >> Se usa para dar una imagen de sistema a la roborio y pueda recibir ordenes
+
 > https://www.ni.com/es/support/downloads/drivers/download.frc-game-tools.html#479842
 * FRC RADIO CONFIGURATION:
 Se usa para la configuración de la roboRadio.
