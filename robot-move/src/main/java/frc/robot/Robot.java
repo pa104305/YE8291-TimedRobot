@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
   // Crear el control de xbox, para usar un mando de xbox como mando
   XboxController joy = new XboxController(0);
 
+  // Crear un temporizador, para poder ejecutar acciones basadas en el paso del tiempo
   Timer tmr = new Timer();
 
   @Override
@@ -70,28 +71,34 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    // Variable para la velocidad predeterminada
     double vel = 0.5;
-    //Codigo para probar cada motor con un boton (unicamente descomantado cuando 
-    //se requieren hacer con los motores por separado)
+    // Comprobar si se esta presionando el boton A del mando
     if(joy.getAButton()){
+      // Detener, reiniciar e iniciar un temporizador
       tmr.stop();
       tmr.reset();
       tmr.start();
+      // Bucle que se ejecuta cuando el tiempo transcurrido es menor o igual a 1.8s
       while(tmr.get() <= 1.8){
+        // girar la transmision a la izquierda
         transmission.arcadeDrive(0, 0.5);
       }
-    }else if(joy.getBButton()){
+    }else if(joy.getBButton()){ // Comprobar si se esta presionando el boton B en el mando
+      // Detener, reiniciar e iniciar un temporizador
       tmr.stop();
       tmr.reset();
       tmr.start();
+      // Bucle que se ejecuta mientras el tiempo transcurrido sea menor o igual a 1.8s
       while(tmr.get() <= 1.8){
+        // girar la transmision a la derecha
         transmission.arcadeDrive(0, -0.5);
       }
-    }else if(joy.getXButton()){
+    }else if(joy.getXButton()){ // Comprobar si se esta presionando el boton X en el mando
+      // Cambiar el valor de la variable de velocidad
       vel = 0.7;
-    }/*else if(joy.getXButton()){
-      right_back.set(0.5);
-    }*/else{
+    }else{ // ejecutar si no se esta presionando ninguno de los botones anteriores
+      // Cambiar al valor predeterminado de la velocidad
       vel = 0.5;
     }
 
