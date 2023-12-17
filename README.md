@@ -10,6 +10,9 @@ Para la programación del robot, se usan las herramientas incluidas en el intala
 * REVLib:
 Para el uso de los controladores SparkMax incluidos en el hardware del dispositivo
 > https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information#c++-and-java
+* NavX:
+Para el uso del giroscopio navx implementado en el hardware del robot
+> https://www.studica.ca/en/navx-2-mxp-robotics-navigation-sensor 
 
 ### Adicionalmente se usa:
 * NI FRC GAME-TOOLS:
@@ -28,3 +31,17 @@ Se usa para la configuración de la roboRadio.
 Se usa para la configuración y monitorización de los controladores SparkMax utilizados
 en el robot.
 > https://docs.revrobotics.com/sparkmax/rev-hardware-client/getting-started-with-the-rev-hardware-client#installation-instructions
+
+* LIMELIGHT (Se utilizara proximamente)
+> Limelight finder
+>> Buscar y entrar a la configuracion visual de la limelight
+
+> Programas de terceros en la pagina de limelight (Bonjour, balena, OS, drivers, etc.)
+
+> https://limelightvision.io/pages/downloads
+
+* NavX (Se utilizara proximamente)
+> NavXUI
+>> Permite visualizar los datos proporcionados por el giroscopio
+
+> https://pdocs.kauailabs.com/navx-mxp/software/navx-mxp-ui/
