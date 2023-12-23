@@ -14,6 +14,10 @@ Para el uso de los controladores SparkMax incluidos en el hardware del dispositi
 Para el uso del giroscopio navx implementado en el hardware del robot (se implementara proximamente en el codigo)
 > https://www.studica.ca/en/navx-2-mxp-robotics-navigation-sensor 
 
+* CTRE
+Implementado para el uso del CANCoder un encoder magnetico absoluto implementado en la transmision swerve.
+> https://store.ctr-electronics.com/software/
+
 ### Adicionalmente se usa:
 * NI FRC GAME-TOOLS:
 Aporta distintas herramientas las mas utilizadas por el equipo:
@@ -45,3 +49,8 @@ en el robot.
 >> Permite visualizar los datos proporcionados por el giroscopio
 
 > https://pdocs.kauailabs.com/navx-mxp/software/navx-mxp-ui/
+
+* Phoenix Tuner X (Se utilkizara proximamente)
+> Configuracion mediante GUI para los productos de CTRE se encuentra en la Microsoft Store
+
+> https://apps.microsoft.com/detail/9NVV4PWDW27Z?hl=es-419&gl=US
