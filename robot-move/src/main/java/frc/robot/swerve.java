@@ -51,15 +51,14 @@ public class swerve {
             // y asi se evite el giro inecesario y este este mas optimizado
             deg = deg - 180;
             turn_wheel(vel, deg);
-        }else{
-            // Comprobar si la posicion a lograr es mayor o menor, para evitar giros inecesarios
-            if(deg > get_turn_absolute_position()){
-                // Si es mayor avanzar el motor con voltaje positivo
-                turnEngine.set(vel);
-            }else if(deg < get_turn_absolute_position()){
-                // Si es menor avanzar el motor con voltaje negativo
-                turnEngine.set(-deg);
-            }
+        }
+        // Comprobar si la posicion a lograr es mayor o menor, para evitar giros inecesarios
+        if(deg > get_turn_absolute_position()){
+            // Si es mayor avanzar el motor con voltaje positivo
+            turnEngine.set(vel);
+        }else if(deg < get_turn_absolute_position()){
+            // Si es menor avanzar el motor con voltaje negativo
+            turnEngine.set(-vel);
         }
     }
     // Obtener la posicion del motor de giro con el encoder relativo

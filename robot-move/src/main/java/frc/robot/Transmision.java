@@ -1,71 +1,77 @@
 package frc.robot;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-
 public class Transmision {
-  // Declaracion de los objetos de controlador sparkmax
-  private CANSparkMax left_front; // controlador izquierdo delantero
-  private CANSparkMax left_back; // controlador izquierdo trasero
-  private CANSparkMax right_front; // controlador derecho delantero
-  private CANSparkMax right_back; // controlador derecho trasero
-  // Grupos de motores
-  MotorControllerGroup left = new MotorControllerGroup(left_front, left_back); // grupo izquierdo
-  MotorControllerGroup right = new MotorControllerGroup(right_front, right_back); // grupo derecho
-  // Diferencial
-  DifferentialDrive controller = new DifferentialDrive(left, right); // transmision robot
-  private double vel = -0.5; // Velocidad predeterminada del robot
-  // Temporizador
-  Timer tmr = new Timer();
+  // Cuatro objetos del modulo swerve
+  private swerve leftFront = new swerve();
+  private swerve leftBack = new swerve();
+  private swerve rightFront = new swerve();
+  private swerve rightBack = new swerve();
+  // Velocidad maxima del giro y avance del robot
+  private double turn_vel = 0.5;
+  private double drive_vel = 0.6;
+  // Angulo deseado del robot
+  private int deg = 0;
+  // Arreglos para operar sobre los 4 ejes del plano cartesiano
+  private int[] lims = {0, 180, -270, 360};
+  // Arreglo para los 4 angulos utilizados para el giro del robot sobre su eje
+  private int[] angles = {0, 45, 135, 225, 315};
+  // Variable para determinar en que cuadrante del plano cartesiano estan las llantas
+  private int quadrant;
 
-  // Metodo para declarar la posicion de los motores
-  public void set_motor_pos(int l_f, int l_b, int r_f, int r_b, MotorType type){
-    left_front = new CANSparkMax(l_f, type); // posicion del motor y tipo de motor
-    left_back = new CANSparkMax(l_b, type); // posicion del motor y tipo de motor
-    right_front = new CANSparkMax(r_f, type); // posicion del motor y tipo de motor
-    right_back = new CANSparkMax(r_b, type); // posicion del motor y tipo de motor 
-    left.setInverted(true); // Motores izquierdos invertidos
-    left_back.follow(left_front); // Seguir al motor delantero
-    right_back.follow(right_front); // Seguir al motor delantero
+  // Metodo para establecer las posiciones de los controladores de la transmision swerve
+  public void set_modules(MotorType type, int d_lf, int t_lf, int abs_lf, int d_lb, int t_lb, int abs_lb, int d_rf, int t_rf, int abs_rf, int d_rb, int t_rb, int abs_rb){
+    // Establece las posiciones de los controladores de la transmicion swerve
+    leftFront.set_parts(d_lf, t_lf, type, abs_lf);
+    leftBack.set_parts(d_lb, t_lb, type, abs_lb);
+    rightFront.set_parts(d_rf, t_rf, type, abs_rf);
+    rightBack.set_parts(d_rb, t_rb, type, abs_rb);
   }
-
-  // Metodo para cambiar la velocidad del robot
-  public void set_vel(double in_vel){
-    if(in_vel < 1 && in_vel > -1){ // Velocidad nueva en el rango admitido
-      vel = -in_vel; // establecer la nueva velocidad y cambiar el signo
+  // Cambiar la velocidad de giro
+  public void set_turn_vel(double vel){
+    turn_vel = vel;
+  }
+  // Cambiar la velocidad de avance
+  public void set_drive_vel(double vel){
+    drive_vel = vel;
+  }
+  // Ejecutar el movimiento de robot hacia la direccion especificada
+  public void move(double x, double y, double vel){
+    // Condicionar if para establecer en que cuadrante se va a trabajar
+    if(x >= 0 && y > 0){
+      quadrant = 0;
+    }else if(x < 0 && y > 0){
+      quadrant = 1;
+    }else if(x < 0 && y < 0){
+      quadrant = 2;
+    }else if(x > 0 && y < 0){
+      quadrant = 3;
     }
+    // Calculo para determinar la cantidad de grados con los que se va a mover la transmision
+    deg = (int) Math.atan(y / x) + lims[quadrant];
+    // Girar los modulos swerve al angulo indicado
+    leftFront.turn_wheel(turn_vel, deg);
+    leftBack.turn_wheel(turn_vel, deg);
+    rightFront.turn_wheel(turn_vel, deg);
+    rightBack.turn_wheel(turn_vel, deg);
+    // Avanzar los modulos swerve, multiplicando el limitante por la velocidad indicada
+    leftFront.move_wheel(drive_vel * vel, deg);
+    leftBack.move_wheel(drive_vel * vel, deg);
+    rightFront.move_wheel(drive_vel * vel, deg);
+    rightBack.move_wheel(drive_vel * vel, deg);
   }
-
-  // Metodo para el movimiento del robot
-  public void move(double dir, double turn){
-    controller.arcadeDrive((dir * vel), (turn * vel)); // Ejecutar el movimiento del robot con una multiplicacion
-  }
-
-  // Metodo para dar una vuelta al robot por tiempo
-  public void turn_time(int turn, double time){
-    // detener, reiniciar e iniciar un temporizador
-    tmr.stop();
-    tmr.reset();
-    tmr.start();
-    // Ejecutar una vuelta por el tiempo indicado
-    while(tmr.get() <= time){
-      controller.arcadeDrive(0, (vel * turn)); // rotar el robot y cambiar la direccion segun una operacion
-    }
-  }
-
-  // Metodo para avanzar al robot por tiempo indicado
-  public void acel_time(int dir, double time){
-    // detener, reiniciar e iniciar un temporizador
-    tmr.stop();
-    tmr.reset();
-    tmr.start();
-    // Ejecutar un avance por el tiempo asignado
-    while(tmr.get() <= time){
-      controller.arcadeDrive((vel * dir), 0); // avanzar el robot y cambiar la direccion segun una operacion
-    }
+  // Metodo para girar el robot sobre su eje
+  public void turn(double turn){
+    // Girar las llantas a su posicion para girar el robot sobre su eje
+    leftFront.turn_wheel(turn_vel, angles[1]);
+    leftBack.turn_wheel(turn_vel, angles[2]);
+    rightFront.turn_wheel(turn_vel, angles[3]);
+    rightBack.turn_wheel(turn_vel, angles[4]);
+    // Acelerar el robot para que gire sobre su propio eje
+    leftFront.move_wheel(drive_vel * turn, angles[1]);
+    leftBack.move_wheel(drive_vel * turn, angles[2]);
+    rightFront.move_wheel(drive_vel * turn, angles[3]);
+    rightBack.move_wheel(drive_vel * turn, angles[4]);
   }
 }

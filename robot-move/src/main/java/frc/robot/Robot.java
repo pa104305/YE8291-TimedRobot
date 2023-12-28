@@ -20,7 +20,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    drive.set_motor_pos(4, 2, 3, 1, MotorType.kBrushed);
+    // Establecer posiciones de los controladores de cada motor
+    // Se establece la posicion indicada para cada motor y encoder en la transmision
+    drive.set_modules(MotorType.kBrushless, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);    
   }
 
   @Override
@@ -29,7 +31,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // Si se requiere mayot velocidad durante el autonomo cambiarla con el metodo 'set_vel()'
-    drive.acel_time(1, 5); // Avanzar el robot hacia la direccion y tiempo indicados
+    //drive.acel_time(1, 5); // Avanzar el robot hacia la direccion y tiempo indicados
   }
 
   @Override
@@ -40,16 +42,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    if(joy.getAButton()){// Comprobar si se esta presionando el boton A del mando
-      drive.turn_time(-1, 1.8); // vuelta direccion y tiempo
-    }else if(joy.getBButton()){ // Comprobar si se esta presionando el boton B en el mando
-      drive.turn_time(1, 1.8); // vuelta direccion y tiempo
-    }else if(joy.getXButton()){ // Comprobar si se esta presionando el boton X en el mando
-      drive.set_vel(0.7); // cambiar velocidad
-    }else{ // ejecutar si no se esta presionando ninguno de los botones anteriores
-      drive.set_vel(0.5); // cambiar velocidad
-    }
-    drive.move(joy.getLeftY(), joy.getLeftX()); // Mover al robot con la velocidad obtenida del joystick
+    // Metodo para el movimiento, recibe el giro que tendran las llantas y la velocidad total que se dara
+    drive.move(joy.getLeftX(), joy.getLeftY(), joy.getRightTriggerAxis());
+    // Girar el robot sobre su eje, recibiendo el valor en x del joystick derecho
+    drive.turn(joy.getRightX());
   }
 
   @Override
