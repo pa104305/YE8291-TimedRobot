@@ -13,7 +13,7 @@ public class Transmision {
   private CANSparkMax right_back; // controlador derecho trasero
   // Diferencial
   // DifferentialDrive controller = new DifferentialDrive(left_front, right_front); // transmision robot
-  private double vel = -0.2; // Velocidad predeterminada del robot
+  private double vel = -0.5; // Velocidad predeterminada del robot
   // Temporizador
   Timer tmr = new Timer();
 
@@ -38,7 +38,15 @@ public class Transmision {
   // Metodo para el movimiento del robot
   public void move(double dir, double turn){
     //controller.arcadeDrive((dir * vel), (turn * vel)); // Ejecutar el movimiento del robot con una multiplicacion
-    group(dir * vel, turn * vel);
+    //group(dir * vel, turn * vel);
+    vel = -0.4;
+    if(turn < -0.1 | turn > 0.1){
+      right_front.set(vel*turn);
+      left_front.set((vel*turn)*-1);
+    }else{
+      right_front.set(vel*dir);
+      left_front.set(vel*dir);
+    }
   }
 
   // Metodo para dar una vuelta al robot por tiempo
@@ -49,6 +57,7 @@ public class Transmision {
     tmr.start();
     // Ejecutar una vuelta por el tiempo indicado
     while(tmr.get() <= time){
+      move(0, (vel*turn));
       //controller.arcadeDrive(0, (vel * turn)); // rotar el robot y cambiar la direccion segun una operacion
     }
   }
@@ -61,6 +70,7 @@ public class Transmision {
     tmr.start();
     // Ejecutar un avance por el tiempo asignado
     while(tmr.get() <= time){
+      move((vel*dir), 0);
       //controller.arcadeDrive((vel * dir), 0); // avanzar el robot y cambiar la direccion segun una operacion
     }
   }
