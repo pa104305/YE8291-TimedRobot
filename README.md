@@ -6,7 +6,11 @@
 Para la programación del robot, se usan las herramientas incluidas en el intalador, como lo son:
 > VSCode WPILib
 
+<<<<<<< HEAD
 > https://docs.revrobotics.com/brushless/spark-max/revlib
+=======
+> https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html#wpilib-installation-guide
+>>>>>>> ad74a03a1ded82c2a60397f8866e2a3f1f7d6597
 * REVLib:
 Para el uso de los controladores SparkMax incluidos en el hardware del dispositivo
 > https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information#c++-and-java
