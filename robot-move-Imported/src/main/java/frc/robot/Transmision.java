@@ -4,15 +4,16 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
-public class Transmision {
+public class Transmision{
   // Declaracion de los objetos de controlador sparkmax
   private CANSparkMax left_front; // controlador izquierdo delantero
   private CANSparkMax left_back; // controlador izquierdo trasero
   private CANSparkMax right_front; // controlador derecho delantero
   private CANSparkMax right_back; // controlador derecho trasero
   // Diferencial
-  // DifferentialDrive controller = new DifferentialDrive(left_front, right_front); // transmision robot
+  DifferentialDrive controller; // transmision robot
   private double vel = -0.5; // Velocidad predeterminada del robot
   // Temporizador
   Timer tmr = new Timer();
@@ -26,6 +27,7 @@ public class Transmision {
     left_front.setInverted(true); // Motores izquierdos invertidos
     left_back.follow(left_front); // Seguir al motor delantero
     right_back.follow(right_front); // Seguir al motor delantero
+    controller = new DifferentialDrive(left_front, right_front);
   }
 
   // Metodo para cambiar la velocidad del robot
@@ -37,16 +39,17 @@ public class Transmision {
 
   // Metodo para el movimiento del robot
   public void move(double dir, double turn){
-    //controller.arcadeDrive((dir * vel), (turn * vel)); // Ejecutar el movimiento del robot con una multiplicacion
-    //group(dir * vel, turn * vel);
-    vel = -0.4;
-    if(turn < -0.1 | turn > 0.1){
+    controller.arcadeDrive(dir*vel, turn*vel);
+    /*if((turn < -0.1 | turn > 0.1) & (dir >= -0.1 | dir <= 0.1)){
       right_front.set(vel*turn);
       left_front.set((vel*turn)*-1);
+    }else if((turn < -0.1 | turn > 0.1) & (dir < -0.1 | dir > 0.1)){
+      right_front.set(vel*dir);
+      left_front.set((vel*turn)*0.5);
     }else{
       right_front.set(vel*dir);
       left_front.set(vel*dir);
-    }
+    }*/
   }
 
   // Metodo para dar una vuelta al robot por tiempo
@@ -75,7 +78,7 @@ public class Transmision {
     }
   }
 
-  private void group(double vel_trs, double turn_trs){
+  /*private void group(double vel_trs, double turn_trs){
     double side = 0.2;
     double oper;
     if(vel_trs > 0 & turn_trs > 0){
@@ -110,5 +113,5 @@ public class Transmision {
       right_front.set(vel_trs);
       left_front.set(vel_trs);
     }
-  }
+  }*/
 }

@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
   // Crear la clase personalizada transmision para el movimiento de la transmision
@@ -17,23 +18,37 @@ public class Robot extends TimedRobot {
   XboxController joy = new XboxController(0);
   // Crear un temporizador, para poder ejecutar acciones basadas en el paso del tiempo
   Timer tmr = new Timer();
-
+  Sensors sensors = new Sensors();
+  double[] val;
   @Override
   public void robotInit() {
     drive.set_motor_pos(3, 1, 4, 2, MotorType.kBrushed);
   }
 
   @Override
-  public void robotPeriodic() {}
-
-  @Override
-  public void autonomousInit() {
-    // Si se requiere mayot velocidad durante el autonomo cambiarla con el metodo 'set_vel()'
-    drive.acel_time(1, 5); // Avanzar el robot hacia la direccion y tiempo indicados
+  public void robotPeriodic() {
+    val = sensors.ll_values();
+    SmartDashboard.putNumber("limelight x", val[0]);
+    SmartDashboard.putNumber("limelight y", val[1]);
+    SmartDashboard.putNumber("limelight a", val[2]);
+    SmartDashboard.putNumber("limelight id", val[3]);
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousInit() {}
+
+  @Override
+  public void autonomousPeriodic() {
+    if(val[2] >= 4 & val[2] < 7){
+      if(val[2] < 5){
+        drive.turn_time(1, 1.8);
+      }else{
+        drive.move(0.3, 0);
+      }
+    }else if(val[2] < 4 & val[2] > 0){
+      drive.move(-0.3, 0);
+    }
+  }
 
   @Override
   public void teleopInit() {}
@@ -56,7 +71,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    // Agregar la calibracion para el giroscopio al final del match
+  }
 
   @Override
   public void testInit() {}
