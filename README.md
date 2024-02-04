@@ -5,11 +5,11 @@
 * WPILibJ:
 Para la programación del robot, se usan las herramientas incluidas en el intalador, como lo son:
 > VSCode WPILib
+> https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html#wpilib-installation-guide
 
-> https://docs.revrobotics.com/brushless/spark-max/revlib
 * REVLib:
 Para el uso de los controladores SparkMax incluidos en el hardware del dispositivo
-> https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information#c++-and-java
+> https://docs.revrobotics.com/brushless/spark-max/revlib
 * NavX:
 Para el uso del giroscopio navx implementado en el hardware del robot (se implementara proximamente en el codigo)
 > https://www.studica.ca/en/navx-2-mxp-robotics-navigation-sensor 
