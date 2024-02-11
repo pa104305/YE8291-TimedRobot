@@ -11,9 +11,11 @@ Para la programación del robot, se usan las herramientas incluidas en el intala
 * REVLib:
 Para el uso de los controladores SparkMax incluidos en el hardware del dispositivo
 > https://docs.revrobotics.com/brushless/spark-max/revlib
+
 * NavX:
 Para el uso del giroscopio navx implementado en el hardware del robot (se implementara proximamente en el codigo)
-> https://www.studica.ca/en/navx-2-mxp-robotics-navigation-sensor 
+> https://dev.studica.com/releases/2024/NavX.json
+> Nota: Ahora el uso de la libreria del NavX debe ser online.
 
 
 ### Adicionalmente se usa:

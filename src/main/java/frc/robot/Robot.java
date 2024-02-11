@@ -18,16 +18,30 @@ public class Robot extends TimedRobot {
   XboxController joy = new XboxController(0);
   // Crear un temporizador, para poder ejecutar acciones basadas en el paso del tiempo
   Timer tmr = new Timer();
+  // Crear el objeto sensores para usar limeligt, gyro y encoders
   Sensors sensors = new Sensors();
+  // Array para almacenar los valores de las limelight
   double[] val;
+  // Crear el objeto mecanismos para usar el shooter, intake y climber
+  Mechanism mechanism = new Mechanism();
+
   @Override
   public void robotInit() {
+    // Establecer la posicion de los motores de la transmision
     drive.set_motor_pos(3, 1, 4, 2, MotorType.kBrushed);
+    // Establecer la posicion de los motores del intake
+    mechanism.set_intake_eng(2);
+    // Establecer la posicion de los motores del shooter
+    mechanism.set_shooter_eng(6, 7, MotorType.kBrushless);
   }
 
   @Override
   public void robotPeriodic() {
+    // Hacer que los motores seguidores sigan a sus lideres
+    drive.follows();
+    // Obtener los valores capturados por la limelight
     val = sensors.ll_values();
+    // Mostrar los valores en la smartdashboard
     SmartDashboard.putNumber("limelight x", val[0]);
     SmartDashboard.putNumber("limelight y", val[1]);
     SmartDashboard.putNumber("limelight a", val[2]);
@@ -39,6 +53,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    // Codigo de autonomo de prueba
     if(val[2] >= 4 & val[2] < 7){
       if(val[2] < 5){
         drive.turn_time(1, 1.8);
@@ -51,20 +66,24 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    //n.set
+  }
 
   @Override
   public void teleopPeriodic() {
     if(joy.getAButton()){// Comprobar si se esta presionando el boton A del mando
-      drive.turn_time(-1, 1.8); // vuelta direccion y tiempo
+      //mechanism.shot(); // Disparar el aro del shooter
     }else if(joy.getBButton()){ // Comprobar si se esta presionando el boton B en el mando
-      drive.turn_time(1, 1.8); // vuelta direccion y tiempo
+      //mechanism.collect(); // Cargar el aro en el shooter 
     }else if(joy.getXButton()){ // Comprobar si se esta presionando el boton X en el mando
-      drive.set_vel(0.7); // cambiar velocidad
-    }else{ // ejecutar si no se esta presionando ninguno de los botones anteriores
-      drive.set_vel(0.5); // cambiar velocidad
+      mechanism.let(); // Soltar el aro en el intake
+    }else if(joy.getYButton()){ // ejecutar si no se esta presionando ninguno de los botones anteriores
+      mechanism.take(); // Tomar el aro con el intake
+    }else{
+      mechanism.stop(); // Detener los motores si no se presiona ningun boton
     }
-    drive.move(joy.getLeftY(), joy.getRightX()); // Mover al robot con la velocidad obtenida del joystick
+    drive.move(joy.getLeftY(), joy.getLeftX()); // Mover al robot con la velocidad obtenida del joystick
   }
 
   @Override

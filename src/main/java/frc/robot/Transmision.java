@@ -1,5 +1,5 @@
 package frc.robot;
-// https://docs.revrobotics.com/brushless/spark-max/revlib
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -14,7 +14,7 @@ public class Transmision{
   private CANSparkMax right_back; // controlador derecho trasero
   // Diferencial
   DifferentialDrive controller; // transmision robot
-  private double vel = -0.5; // Velocidad predeterminada del robot
+  private double vel = -0.8; // Velocidad predeterminada del robot
   // Temporizador
   Timer tmr = new Timer();
 
@@ -25,9 +25,13 @@ public class Transmision{
     right_front = new CANSparkMax(r_f, type); // posicion del motor y tipo de motor
     right_back = new CANSparkMax(r_b, type); // posicion del motor y tipo de motor 
     left_front.setInverted(true); // Motores izquierdos invertidos
+    // Indicar los motores superiores de la transmision
+    controller = new DifferentialDrive(left_front, right_front);
+  }
+
+  public void follows(){
     left_back.follow(left_front); // Seguir al motor delantero
     right_back.follow(right_front); // Seguir al motor delantero
-    controller = new DifferentialDrive(left_front, right_front);
   }
 
   // Metodo para cambiar la velocidad del robot
@@ -39,17 +43,7 @@ public class Transmision{
 
   // Metodo para el movimiento del robot
   public void move(double dir, double turn){
-    controller.arcadeDrive(dir*vel, turn*vel);
-    /*if((turn < -0.1 | turn > 0.1) & (dir >= -0.1 | dir <= 0.1)){
-      right_front.set(vel*turn);
-      left_front.set((vel*turn)*-1);
-    }else if((turn < -0.1 | turn > 0.1) & (dir < -0.1 | dir > 0.1)){
-      right_front.set(vel*dir);
-      left_front.set((vel*turn)*0.5);
-    }else{
-      right_front.set(vel*dir);
-      left_front.set(vel*dir);
-    }*/
+    controller.arcadeDrive(dir*vel, turn*vel); // Mover el robot en relacion al joystick
   }
 
   // Metodo para dar una vuelta al robot por tiempo
@@ -60,8 +54,7 @@ public class Transmision{
     tmr.start();
     // Ejecutar una vuelta por el tiempo indicado
     while(tmr.get() <= time){
-      move(0, (vel*turn));
-      //controller.arcadeDrive(0, (vel * turn)); // rotar el robot y cambiar la direccion segun una operacion
+      controller.arcadeDrive(0, (vel * turn)); // rotar el robot y cambiar la direccion segun una operacion
     }
   }
 
@@ -73,45 +66,7 @@ public class Transmision{
     tmr.start();
     // Ejecutar un avance por el tiempo asignado
     while(tmr.get() <= time){
-      move((vel*dir), 0);
-      //controller.arcadeDrive((vel * dir), 0); // avanzar el robot y cambiar la direccion segun una operacion
+      controller.arcadeDrive((vel * dir), 0); // avanzar el robot y cambiar la direccion segun una operacion
     }
   }
-
-  /*private void group(double vel_trs, double turn_trs){
-    double side = 0.2;
-    double oper;
-    if(vel_trs > 0 & turn_trs > 0){
-      oper = vel_trs - turn_trs;
-      if(oper != 0){
-        if(oper < 1 & oper > -1){
-          side = vel_trs - turn_trs;
-        }
-      }
-    }else if(vel_trs < 0 & turn_trs < 0){
-      oper = vel_trs + (turn_trs * -1); 
-      if(oper != 0){
-        if(oper < 1 & oper > -1){
-          side = vel_trs + (turn_trs * -1);
-        }
-      }
-    }else{
-      oper = vel_trs + turn_trs;
-      if(oper != 0){
-        if(oper < 1 & oper > -1){
-          side = vel_trs + turn_trs;
-        }
-      }
-    }
-    if(turn_trs > 0){
-      right_front.set(side);
-      left_front.set(vel_trs);
-    }else if(turn_trs < 0){
-      right_front.set(vel_trs);
-      left_front.set(side);
-    }else{
-      right_front.set(vel_trs);
-      left_front.set(vel_trs);
-    }
-  }*/
 }
